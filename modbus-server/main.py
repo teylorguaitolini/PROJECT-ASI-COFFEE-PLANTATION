@@ -1,6 +1,6 @@
-from config import Config
 from pyModbusTCP.server import ModbusServer
-from MyDataBank import MyDataBank
+from utils.config import Config
+from utils.MyDataBank import MyDataBank
 
 if __name__ == "__main__":
     try:
