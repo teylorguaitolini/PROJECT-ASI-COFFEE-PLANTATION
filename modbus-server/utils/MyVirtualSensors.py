@@ -56,7 +56,7 @@ class MyVirtualSensors:
         # _get_ambient_temperature
         Temperatura Ambiente (°C)
         """
-        sensor_ambient_temperature = random.uniform(20, 35)
+        sensor_ambient_temperature = random.uniform(20, 40)
         if not self._floating_point:
             sensor_ambient_temperature = int(sensor_ambient_temperature)
         return sensor_ambient_temperature
