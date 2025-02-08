@@ -22,16 +22,11 @@ class Config:
         self._web_server_port = 0
 
         # [Pages-Update-Interval]
-        self._sensor_temperature_page = 0
-        self._sensor_soil_moisture_page = 0
-        self._sensor_irrigation_level_page = 0
-        self._sensor_solar_index_page = 0
-        self._sensor_wind_speed_page = 0
-        self._sensor_soil_ph_page = 0
-        self._sensor_nutrient_concentration_page = 0
-        self._sensor_pest_detection_page = 0
-        self._sensor_biomass_production_page = 0
-        self._sensor_soil_temperature_page = 0
+        self._irrigation_control_page = 0
+        self._ambient_temp_control_page = 0
+        self._sunlight_control_page = 0
+        self._pest_control_page = 0
+        self._soil_nutrient_control_page = 0
         # --- --- #
 
     # [Web-Server]
@@ -45,44 +40,24 @@ class Config:
 
     # [Pages-Update-Interval]
     @property
-    def sensor_temperature_page(self):
-        return self._sensor_temperature_page
+    def irrigation_control_page(self):
+        return self._irrigation_control_page
 
     @property
-    def sensor_soil_moisture_page(self):
-        return self._sensor_soil_moisture_page
-
+    def ambient_temp_control_page(self):
+        return self._ambient_temp_control_page
+    
     @property
-    def sensor_irrigation_level_page(self):
-        return self._sensor_irrigation_level_page
-
+    def sunlight_control_page(self):
+        return self._sunlight_control_page
+    
     @property
-    def sensor_solar_index_page(self):
-        return self._sensor_solar_index_page
-
+    def pest_control_page(self):
+        return self._pest_control_page
+    
     @property
-    def sensor_wind_speed_page(self):
-        return self._sensor_wind_speed_page
-
-    @property
-    def sensor_soil_ph_page(self):
-        return self._sensor_soil_ph_page
-
-    @property
-    def sensor_nutrient_concentration_page(self):
-        return self._sensor_nutrient_concentration_page
-
-    @property
-    def sensor_pest_detection_page(self):
-        return self._sensor_pest_detection_page
-
-    @property
-    def sensor_biomass_production_page(self):
-        return self._sensor_biomass_production_page
-
-    @property
-    def sensor_soil_temperature_page(self):
-        return self._sensor_soil_temperature_page
+    def soil_nutrient_control_page(self):
+        return self._soil_nutrient_control_page
 
     def load(self):
         """
@@ -96,14 +71,8 @@ class Config:
         self._web_server_port = self._config.getint("Web-Server", "port")
 
         # [Pages-Update-Interval]
-        self._sensor_temperature_page = self._config.getint("Pages-Update-Interval", "sensor_temperature_page")
-        self._sensor_soil_moisture_page = self._config.getint("Pages-Update-Interval", "sensor_soil_moisture_page")
-        self._sensor_irrigation_level_page = self._config.getint("Pages-Update-Interval", "sensor_irrigation_level_page")
-        self._sensor_solar_index_page = self._config.getint("Pages-Update-Interval", "sensor_solar_index_page")
-        self._sensor_wind_speed_page = self._config.getint("Pages-Update-Interval", "sensor_wind_speed_page")
-        self._sensor_soil_ph_page = self._config.getint("Pages-Update-Interval", "sensor_soil_ph_page")
-        self._sensor_nutrient_concentration_page = self._config.getint("Pages-Update-Interval", "sensor_nutrient_concentration_page")
-        self._sensor_pest_detection_page = self._config.getint("Pages-Update-Interval", "sensor_pest_detection_page")
-        self._sensor_biomass_production_page = self._config.getint("Pages-Update-Interval", "sensor_biomass_production_page")
-        self._sensor_soil_temperature_page = self._config.getint("Pages-Update-Interval", "sensor_soil_temperature_page")
-
+        self._irrigation_control_page = self._config.getint("Pages-Update-Interval", "irrigation_control_page")
+        self._ambient_temp_control_page = self._config.getint("Pages-Update-Interval", "ambient_temp_control_page")
+        self._sunlight_control_page = self._config.getint("Pages-Update-Interval", "sunlight_control_page")
+        self._pest_control_page = self._config.getint("Pages-Update-Interval", "pest_control_page")
+        self._soil_nutrient_control_page = self._config.getint("Pages-Update-Interval", "soil_nutrient_control_page")

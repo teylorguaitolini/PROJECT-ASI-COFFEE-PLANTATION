@@ -1,11 +1,11 @@
-# sensor_temperature.py
+# sunlight_control_page.py
 import streamlit as st
 import plotly.graph_objects as go
 from time import sleep
 from utils.api_client import APIClient
 from utils.get_base64_image import get_base64_image
 
-class SensorTemperaturePage:
+class SunlightControlPage:
     def __init__(self, update_interval: int, api_client: APIClient):
         """
         :param update_interval: Intervalo de atualização em segundos.
@@ -15,36 +15,38 @@ class SensorTemperaturePage:
         self._api_client = api_client
 
     def show(self):
-        st.header('HMI Plantação de Café - Sensor de Temperatura Ambiente (°C)', divider='green')
+        # --- Limpa a tela --- #
+        st.empty()
+
+        st.header('HMI Estufa - Controle de Iluminação Solar (W/m²)', divider='green')
         
-        # --- Leitura do valor atual do sensor --- #
+        # --- Leitura do valor atual do sensor (sensor_id = 2) --- #
         try:
-            data = self._api_client.read_sensor(sensor_id=0)
+            data = self._api_client.read_sensor(sensor_id=2)
             reading_value = data.get("reading_value", "N/A")
         except Exception as e:
             reading_value = f"Erro: {e}"
         
-        st.write(f"Temperatura atual: {reading_value} °C")
+        st.write(f"Índice de luz solar atual: {reading_value} W/m²")
         
-        # Converte o valor para numérico (para uso no gauge)
+        # Converte o valor para numérico para uso nos gráficos e condições
         try:
             value_numeric = float(reading_value)
         except:
             value_numeric = 0
 
-        # --- Criação do gauge (termômetro) --- #
+        # --- Criação do gauge (indicador) para o índice de luz solar --- #
         gauge_fig = go.Figure(go.Indicator(
             mode="gauge+number",
             value=value_numeric,
             domain={'x': [0, 1], 'y': [0, 1]},
-            title={'text': "Temperatura (°C)"},
+            title={'text': "Luz Solar (W/m²)"},
             gauge={
-                'axis': {'range': [20, 40]},
-                'bar': {'color': "red"},
+                'axis': {'range': [0, 1000]},
+                'bar': {'color': "gold"},
                 'steps': [
-                    {'range': [20, 30], 'color': "lightblue"},
-                    {'range': [30, 35], 'color': "lightgreen"},
-                    {'range': [35, 40], 'color': "lightsalmon"}
+                    {'range': [0, 400], 'color': "lightsalmon"},
+                    {'range': [400, 1000], 'color': "lightgreen"}
                 ],
                 'threshold': {
                     'line': {'color': "orange", 'width': 4},
@@ -56,19 +58,17 @@ class SensorTemperaturePage:
         
         # --- Divisão da tela em duas colunas --- #
         col1, col2 = st.columns(2)
-        
         with col1:
             st.plotly_chart(gauge_fig, use_container_width=True)
         
-        # --- Gráfico do histórico de temperatura (na coluna 2) --- #
+        # --- Gráfico do histórico do índice de luz solar (na coluna 2) --- #
         try:
-            historical_data = self._api_client.get_readings(sensor_id=0)
+            historical_data = self._api_client.get_readings(sensor_id=2)
             readings_list = historical_data.get("readings", [])
         except Exception as e:
             readings_list = []
             st.error(f"Erro ao obter histórico: {e}")
         
-        # Extrai datas e valores do histórico
         times = []
         values = []
         for reading in readings_list:
@@ -79,40 +79,39 @@ class SensorTemperaturePage:
                 val = 0
             values.append(val)
         
-        # Cria o gráfico de linha para o histórico de temperatura
         hist_fig = go.Figure()
         hist_fig.add_trace(go.Scatter(
             x=times,
             y=values,
             mode='lines+markers',
-            name='Temperatura'
+            name='Luz Solar'
         ))
         hist_fig.update_layout(
-            title='Histórico de Temperatura',
+            title='Histórico do Índice de Luz Solar',
             xaxis_title='Data/Hora',
-            yaxis_title='Temperatura (°C)'
+            yaxis_title='W/m²'
         )
         
         with col2:
             st.plotly_chart(hist_fig, use_container_width=True)
         
-        # --- Exibe imagem do ventilador na sidebar, abaixo do combobox --- #
-        # Se a temperatura for maior que 35°C, exibe imagem do ventilador ligado; senão, desligado.
-        if value_numeric > 35:
-            fan_image_path = "images/fanON.png"
-            caption = "Ventilador de Nebulização Ligado"
+        # --- Exibe imagem da lâmpada na sidebar --- #
+        # Se o índice de luz solar for menor que 400 W/m², a luz artificial será ativada.
+        if value_numeric < 400:
+            lamp_image_path = "images/lampON.png"
+            caption = "Lâmpada Artificial Ligada"
         else:
-            fan_image_path = "images/fanOFF.png"
-            caption = "Ventilador de Nebulização Desligado"
+            lamp_image_path = "images/lampOFF.png"
+            caption = "Lâmpada Artificial Desligada"
         
-        img_base64 = get_base64_image(fan_image_path)
+        img_base64 = get_base64_image(lamp_image_path)
         image_html = f"""
             <div style="text-align: center; margin-top: 20px;">
                 <img src="data:image/png;base64,{img_base64}" width="150px">
                 <p>{caption}</p>
             </div>
-            """
-        
+        """
+        st.sidebar.markdown("<br><br>", unsafe_allow_html=True)
         st.sidebar.markdown(image_html, unsafe_allow_html=True)
         
         # --- Atualização periódica --- #
