@@ -35,11 +35,11 @@ Com base nas variáveis acima, foram definidas as seguintes regras de automaçã
 
 3. **Gestão de Luz Solar**:
 
-   - Se o índice de luz solar for menor que 400 W/m² por mais de 4 horas, alertar para a necessidade de iluminação artificial em estufas.
+   - Se o índice de luz solar for menor que 400 W/m², ativar a iluminação artificial em estufas.
 
 4. **Detecção de Pragas**:
 
-   - Se for detectada a presença de pragas, emitir um alarme para o operador e sugerir aplicação de pesticida.
+   - Se for detectada a presença de pragas, emitir um alarme para o operador e iniciar a aplicação automática de pesticida.
 
 5. **Nutrição Automática do Solo**:
    - Se a concentração de nutrientes for menor que os níveis ideais (ex.: Nitrogênio < 20 ppm), ativar a aplicação de fertilizante automaticamente.

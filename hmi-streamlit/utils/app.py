@@ -6,6 +6,7 @@ from utils.irrigation_control_page import IrrigationControlPage
 from utils.ambient_temp_control_page import AmbientTempControlPage
 from utils.sunlight_control_page import SunlightControlPage
 from utils.pest_control_page import PestControlPage
+from utils.soil_nutrient_control_page import SoilNutrientControlPage
 
 class APP:
     def __init__(self, conf: Config):
@@ -30,7 +31,7 @@ class APP:
             layout='wide'
         )
 
-        # Barra lateral com um combobox para selecionar a tela do sensor
+        # Barra lateral com um combobox para selecionar a tela
         option = st.sidebar.selectbox(
             "Selecione a Página:",
             [
@@ -46,11 +47,10 @@ class APP:
         # Cria um container principal para o conteúdo da página
         page_container = st.empty()
 
-        # Alterna para a tela correspondente ao sensor selecionado
+        # Alterna para a tela correspondente
         if option == "Página inicial":
             page_container.empty()
-            page = InitialPage()
-            page.show()
+            InitialPage().show()
         elif option == "Controle de Irrigação (Umidade %)":
             page_container.empty()
             IrrigationControlPage(self._conf.irrigation_control_page, self._api_client).show()
@@ -64,4 +64,5 @@ class APP:
             page_container.empty()
             PestControlPage(self._conf.pest_control_page, self._api_client).show()
         elif option == "Controle de Nutrientes do Solo (ppm de Nitrogênio)":
-            pass
+            page_container.empty()
+            SoilNutrientControlPage(self._conf.soil_nutrient_control_page, self._api_client).show()
